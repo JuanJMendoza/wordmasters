@@ -7,11 +7,12 @@ let currentSquareIndex = 0;
 let currentWord = [];
 
 document.addEventListener("keydown", function (event) {
-  // uses the isLetter function from above
-  console.log(event.key);
-
   let row = rows[currentRowIndex % 6].children;
   let square = row[currentSquareIndex % 5];
+
+  getWordOfTheDay().then(async (wordOfTheDay) => {
+    console.log(wordOfTheDay);
+  });
 
   if (isLetter(event.key) && currentRowIndex < 6) {
     square.innerText = event.key;
@@ -43,4 +44,10 @@ document.addEventListener("keydown", function (event) {
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
+}
+
+async function getWordOfTheDay() {
+  const promise = await fetch("https://words.dev-apis.com/word-of-the-day");
+  const processedResponse = await promise.json();
+  return processedResponse.word;
 }
