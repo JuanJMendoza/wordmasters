@@ -51,6 +51,7 @@
   padding: 2px 0;
   font-size: xx-large;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
 .correct-guess {
@@ -65,18 +66,47 @@
   background-color: rgba(255, 208, 0, 0.834);
 }
 
-.header.won {
-  animation: rainbow-celebration 1s infinite;
+.won {
+  animation: rainbow-celebration 2s linear infinite;
+  font-size: 50px;
 }
 
 @keyframes rainbow-celebration {
+  100%,
   0% {
-    color: red;
+    color: rgb(255, 0, 0);
+  }
+  8% {
+    color: rgb(255, 127, 0);
+  }
+  16% {
+    color: rgb(255, 255, 0);
+  }
+  25% {
+    color: rgb(127, 255, 0);
+  }
+  33% {
+    color: rgb(0, 255, 0);
+  }
+  41% {
+    color: rgb(0, 255, 127);
   }
   50% {
-    color: blue;
+    color: rgb(0, 255, 255);
   }
-  100% {
-    color: green;
+  58% {
+    color: rgb(0, 127, 255);
+  }
+  66% {
+    color: rgb(0, 0, 255);
+  }
+  75% {
+    color: rgb(127, 0, 255);
+  }
+  83% {
+    color: rgb(255, 0, 255);
+  }
+  91% {
+    color: rgb(255, 0, 127);
   }
 }

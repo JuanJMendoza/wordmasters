@@ -29,6 +29,8 @@ document.addEventListener("keydown", function (event) {
         const child = rowChildren[i];
         child.classList.add("correct-guess");
       }
+
+      document.getElementsByTagName("h1")[0].classList.add("won");
       // trigger alert on window
       alert("You Win, You're a Word Master!");
       return;
