@@ -8,8 +8,8 @@ let currentSquareIndex = 0;
 let guessedChars = [];
 
 document.addEventListener("keydown", function (event) {
-  let row = rows[currentRowIndex % 6].children;
-  let square = row[currentSquareIndex % 5];
+  let rowChildren = rows[currentRowIndex % 6].children;
+  let square = rowChildren[currentSquareIndex % 5];
 
   if (isLetter(event.key) && currentRowIndex < 6) {
     square.innerText = event.key;
@@ -22,18 +22,30 @@ document.addEventListener("keydown", function (event) {
     }
   } else if (event.key == "Enter" && guessedChars.length == 5) {
     // check if word is valid with api, if so
-    if (true) {
-      // go to the next row
-      currentRowIndex += 1;
-      currentSquareIndex = 0;
-      guessedChars = [];
+    // check if guessed word matches word of the day
+    if (isCorrectGuess(guessedChars)) {
+      // flash boxes in current row green
+      for (let i = 0; i < rowChildren.length; i++) {
+        const child = rowChildren[i];
+        child.classList.add("correct-guess");
+      }
+      // trigger alert on window
+      alert("You Win, You're a Word Master!");
+      return;
     }
+    // check if word is even a valid word at all, if so
+    // flash boxes red to tell user to try again on same row
+    // otherwise, guess is wrong
+    //go to the next row
+    // currentRowIndex += 1;
+    // currentSquareIndex = 0;
+    // guessedChars = [];
   } else if (event.key == "Backspace" && currentSquareIndex > 0) {
-    if (row[currentSquareIndex].innerText == "") {
+    if (rowChildren[currentSquareIndex].innerText == "") {
       currentSquareIndex -= 1;
     }
     guessedChars.pop();
-    row[currentSquareIndex].innerText = "";
+    rowChildren[currentSquareIndex].innerText = "";
   }
 });
 
@@ -56,4 +68,29 @@ function isCorrectGuess(guessedChars) {
     return true;
   }
   return false;
+}
+
+function getTextFromNum(num) {
+  let res = "";
+  switch (num) {
+    case 1:
+      res = "first";
+      break;
+    case 2:
+      res = "second";
+      break;
+    case 3:
+      res = "thrid";
+      break;
+    case 4:
+      res = "fourth";
+      break;
+    case 5:
+      res = "fifth";
+      break;
+    case 6:
+      res = "sixth";
+      break;
+  }
+  return res;
 }
