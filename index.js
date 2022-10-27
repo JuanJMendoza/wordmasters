@@ -29,7 +29,7 @@ document.addEventListener("keydown", function (event) {
         const child = rowChildren[i];
         child.classList.add("correct-guess");
       }
-
+      // hightlight title with rainbow highlights
       document.getElementsByTagName("h1")[0].classList.add("won");
       // trigger alert on window
       alert("You Win, You're a Word Master!");
@@ -39,9 +39,13 @@ document.addEventListener("keydown", function (event) {
     // flash boxes red to tell user to try again on same row
     // otherwise, guess is wrong
     //go to the next row
-    // currentRowIndex += 1;
-    // currentSquareIndex = 0;
-    // guessedChars = [];
+    currentRowIndex += 1;
+    currentSquareIndex = 0;
+    guessedChars = [];
+    if (event.key == "Enter" && currentRowIndex == 6) {
+      // you lose!
+      alert(`You lose, the word was ${wordOfTheDay}`);
+    }
   } else if (event.key == "Backspace" && currentSquareIndex > 0) {
     if (rowChildren[currentSquareIndex].innerText == "") {
       currentSquareIndex -= 1;
