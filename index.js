@@ -1,10 +1,9 @@
 const buttons = document.querySelector(".squares");
 const rows = buttons.children;
-let wordOfTheDay = ""; // assigned in getWordOfTheDay(), it's an immediately invoked function expression.
-
+let wordOfTheDay = ""; // assigned in processWordOfTheDay(), it's an immediately invoked function expression.
+let charCounter = null; // assigned in processWordOfTheDay(), it's an immediately invoked function expression.
 let currentRowIndex = 0;
 let currentSquareIndex = 0;
-
 let guessedChars = [];
 
 document.addEventListener("keydown", function (event) {
@@ -34,6 +33,8 @@ document.addEventListener("keydown", function (event) {
       // trigger alert on window
       alert("You Win, You're a Word Master!");
       return;
+    } else {
+      guessChecker(guessedChars, rowChildren);
     }
     // check if word is even a valid word at all, if so
     // flash boxes red to tell user to try again on same row
@@ -61,11 +62,15 @@ function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
 
-(async function getWordOfTheDay() {
+async function fetchWordOfTheDay() {
   const promise = await fetch("https://words.dev-apis.com/word-of-the-day");
   const processedResponse = await promise.json();
-  wordOfTheDay = processedResponse.word;
-  return wordOfTheDay;
+  return processedResponse.word;
+}
+
+(async function processedWordOfTheDay() {
+  wordOfTheDay = await fetchWordOfTheDay();
+  charCounter = makeCounter(wordOfTheDay);
 })();
 
 function isCorrectGuess(guessedChars) {
@@ -76,27 +81,42 @@ function isCorrectGuess(guessedChars) {
   return false;
 }
 
-function getTextFromNum(num) {
-  let res = "";
-  switch (num) {
-    case 1:
-      res = "first";
-      break;
-    case 2:
-      res = "second";
-      break;
-    case 3:
-      res = "thrid";
-      break;
-    case 4:
-      res = "fourth";
-      break;
-    case 5:
-      res = "fifth";
-      break;
-    case 6:
-      res = "sixth";
-      break;
+function makeCounter(wordOfTheDay) {
+  const charFreq = new Map();
+  for (let i = 0; i < wordOfTheDay.length; i++) {
+    char = wordOfTheDay[i];
+    if (!charFreq.has(char)) {
+      charFreq.set(char, 0);
+    }
+    charFreq.set(char, charFreq.get(char) + 1);
   }
-  return res;
+
+  return charFreq;
 }
+
+function guessChecker(guessedChars, rowChildren) {
+  for (let i = 0; i < guessedChars.length; i++) {
+    char = guessedChars[i];
+    const child = rowChildren[i];
+    if (!charCounter.has(char) || charCounter.get(char) == 0) {
+      // turn square the current char is in to gray
+      child.classList.add("wrong-guess");
+    } else if (
+      charCounter.has(char) &&
+      charCounter.get(char) > 0 &&
+      char != wordOfTheDay[i]
+    ) {
+      // turn squrae with char in wrong position to yellow
+      charCounter.set(char, charCounter.get(char) - 1);
+      child.classList.add("wrong-placement-guess");
+    } else {
+      // correct placement, turn square green
+      charCounter.set(char, charCounter.get(char) - 1);
+      child.classList.add("correct-guess");
+    }
+  }
+}
+
+// async function validateGuessWord(guessedChars) {
+//   const guessWord = guessedChars.join("");
+// }
