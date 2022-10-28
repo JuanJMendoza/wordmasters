@@ -58,11 +58,11 @@
   background-color: green;
 }
 
-.square.wrong-guess {
+.wrong-guess {
   background-color: gray;
 }
 
-.square.wrong-placement-guess {
+.wrong-placement-guess {
   background-color: rgba(255, 208, 0, 0.834);
 }
 
