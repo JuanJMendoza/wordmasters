@@ -1,7 +1,6 @@
 const buttons = document.querySelector(".squares");
 const rows = buttons.children;
 let wordOfTheDay = ""; // assigned in processWordOfTheDay(), it's an immediately invoked function expression.
-let charCounter = null; // assigned in processWordOfTheDay(), it's an immediately invoked function expression.
 let currentRowIndex = 0;
 let currentSquareIndex = 0;
 let guessedChars = [];
@@ -89,7 +88,6 @@ async function fetchWordOfTheDay() {
 
 (async function processedWordOfTheDay() {
   wordOfTheDay = await fetchWordOfTheDay();
-  charCounter = makeCounter(wordOfTheDay);
 })();
 
 function isCorrectGuess(guessedChars) {
@@ -114,24 +112,24 @@ function makeCounter(wordOfTheDay) {
 }
 
 function guessChecker(guessedChars, rowChildren) {
-  const charCounterCopy = new Map(charCounter);
+  const charCounter = makeCounter(wordOfTheDay);
   for (let i = 0; i < guessedChars.length; i++) {
     char = guessedChars[i];
     const child = rowChildren[i];
-    if (!charCounterCopy.has(char) || charCounterCopy.get(char) == 0) {
+    if (!charCounter.has(char) || charCounter.get(char) <= 0) {
       // turn square the current char is in to gray
       child.classList.add("wrong-guess");
     } else if (
-      charCounterCopy.has(char) &&
-      charCounterCopy.get(char) > 0 &&
+      charCounter.has(char) &&
+      charCounter.get(char) > 0 &&
       char != wordOfTheDay[i]
     ) {
       // turn squrae with char in wrong position to yellow
-      charCounterCopy.set(char, charCounterCopy.get(char) - 1);
+      charCounter.set(char, charCounter.get(char) - 1);
       child.classList.add("wrong-placement-guess");
     } else {
       // correct placement, turn square green
-      charCounterCopy.set(char, charCounterCopy.get(char) - 1);
+      charCounter.set(char, charCounter.get(char) - 1);
       child.classList.add("correct-guess");
     }
   }
