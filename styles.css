@@ -112,7 +112,10 @@
 }
 
 .invalid-word {
-  animation: invalid-word 1s 1;
+  border-color: #ccc;
+  animation-name: invalid-word;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
 }
 
 @keyframes invalid-word {

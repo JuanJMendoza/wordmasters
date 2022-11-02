@@ -7,7 +7,8 @@ let currentSquareIndex = 0;
 let guessedChars = [];
 
 document.addEventListener("keydown", async function (event) {
-  let rowChildren = rows[currentRowIndex % 6].children;
+  let currentRow = rows[currentRowIndex % 6];
+  let rowChildren = currentRow.children;
   let square = rowChildren[currentSquareIndex % 5];
 
   if (isLetter(event.key) && currentRowIndex < 6) {
@@ -22,6 +23,18 @@ document.addEventListener("keydown", async function (event) {
   } else if (event.key == "Enter" && guessedChars.length == 5) {
     if (!(await validateGuessWord(guessedChars))) {
       // if the guess isn't a valid word, blink borders red
+      for (let i = 0; i < rowChildren.length; i++) {
+        const child = rowChildren[i];
+        child.classList.add("invalid-word");
+        console.log(child);
+      }
+      setTimeout(() => {
+        for (let i = 0; i < rowChildren.length; i++) {
+          const child = rowChildren[i];
+          child.classList.remove("invalid-word");
+          console.log(child);
+        }
+      }, 1000);
     } else if (isCorrectGuess(guessedChars)) {
       // check if word is valid with api, if so
       // check if guessed word matches word of the day
@@ -37,14 +50,12 @@ document.addEventListener("keydown", async function (event) {
       return;
     } else {
       guessChecker(guessedChars, rowChildren);
+      newTry();
     }
     // check if word is even a valid word at all, if so
     // flash boxes red to tell user to try again on same row
     // otherwise, guess is wrong
     //go to the next row
-    currentRowIndex += 1;
-    currentSquareIndex = 0;
-    guessedChars = [];
     if (event.key == "Enter" && currentRowIndex == 6) {
       // you lose!
       alert(`You lose, the word was ${wordOfTheDay}`);
@@ -62,6 +73,12 @@ document.addEventListener("keydown", async function (event) {
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
+}
+
+function newTry() {
+  currentRowIndex += 1;
+  currentSquareIndex = 0;
+  guessedChars = [];
 }
 
 async function fetchWordOfTheDay() {
