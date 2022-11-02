@@ -110,3 +110,13 @@
     color: rgb(255, 0, 127);
   }
 }
+
+.invalid-word {
+  animation: invalid-word 1s 1;
+}
+
+@keyframes invalid-word {
+  50% {
+    border-color: rgb(255, 0, 0);
+  }
+}
