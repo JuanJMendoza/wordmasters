@@ -114,23 +114,24 @@ function makeCounter(wordOfTheDay) {
 }
 
 function guessChecker(guessedChars, rowChildren) {
+  const charCounterCopy = new Map(charCounter);
   for (let i = 0; i < guessedChars.length; i++) {
     char = guessedChars[i];
     const child = rowChildren[i];
-    if (!charCounter.has(char) || charCounter.get(char) == 0) {
+    if (!charCounterCopy.has(char) || charCounterCopy.get(char) == 0) {
       // turn square the current char is in to gray
       child.classList.add("wrong-guess");
     } else if (
-      charCounter.has(char) &&
-      charCounter.get(char) > 0 &&
+      charCounterCopy.has(char) &&
+      charCounterCopy.get(char) > 0 &&
       char != wordOfTheDay[i]
     ) {
       // turn squrae with char in wrong position to yellow
-      charCounter.set(char, charCounter.get(char) - 1);
+      charCounterCopy.set(char, charCounterCopy.get(char) - 1);
       child.classList.add("wrong-placement-guess");
     } else {
       // correct placement, turn square green
-      charCounter.set(char, charCounter.get(char) - 1);
+      charCounterCopy.set(char, charCounterCopy.get(char) - 1);
       child.classList.add("correct-guess");
     }
   }
