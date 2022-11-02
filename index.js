@@ -20,12 +20,8 @@ document.addEventListener("keydown", async function (event) {
       currentSquareIndex += 1;
     }
   } else if (event.key == "Enter" && guessedChars.length == 5) {
-    if (await !validateGuessWord(guessedChars)) {
+    if (!(await validateGuessWord(guessedChars))) {
       // if the guess isn't a valid word, blink borders red
-      for (let i = 0; i < rowChildren.length; i++) {
-        const child = rowChildren[i];
-        child.classList.add("invalid-word");
-      }
     } else if (isCorrectGuess(guessedChars)) {
       // check if word is valid with api, if so
       // check if guessed word matches word of the day
@@ -125,11 +121,17 @@ function guessChecker(guessedChars, rowChildren) {
 
 async function validateGuessWord(guessedChars) {
   const guessedWord = guessedChars.join("");
-  const response = await fetch(
-    "https://words.dev-apis.com/validate-word",
-    JSON.stringify({
+  const promise = await fetch("https://words.dev-apis.com/validate-word", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       word: guessedWord,
-    })
-  );
+    }),
+  });
+  const response = await promise.json();
+  console.log(response.validWord);
   return response.validWord;
 }
